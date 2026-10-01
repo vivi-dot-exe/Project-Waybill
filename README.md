@@ -19,7 +19,8 @@ Project-Waybill/
 │   └── .gitkeep
 ├── src/                              # Core machine learning & pipeline logic
 │   ├── __init__.py
-│   ├── train.py                      # Pure NumPy GD & Scikit-Learn training pipeline
+│   ├── train.py                      # Production training pipeline & model artifact export
+│   ├── train_phase1.py               # Pure NumPy Gradient Descent (Andrew Ng Course formulation)
 │   └── predict.py                    # Inference helper & risk classification
 ├── process_dataco.py                 # DataCo dataset ingestion & feature engineering
 ├── main.py                           # Application entry point & demo CLI
@@ -45,16 +46,18 @@ In **Phase 1**, we establish the baseline numerical model to predict shipment ar
 
 ---
 
-### 2. Model Implementations (`src/train.py`)
+### 2. Model Implementations (`src/train_phase1.py` & `src/train.py`)
 
-1. **Pure NumPy Gradient Descent (`NumPyLinearRegression`)**:
-   - Implemented from scratch using vector calculus & matrix operations.
-   - Cost Function: Mean Squared Error (MSE).
-   - Parameter updates via partial derivatives:
-     $$w_{t+1} = w_t - \alpha \frac{1}{m} X^T (\hat{y} - y)$$
-     $$b_{t+1} = b_t - \alpha \frac{1}{m} \sum (\hat{y} - y)$$
+1. **Pure NumPy Gradient Descent (`src/train_phase1.py`)**:
+   - Implemented from scratch using vector calculus matching Andrew Ng's Machine Learning formulation:
+     - Hypothesis: $f_{w,b}(X) = X \cdot w + b$
+     - Cost Function: $J(w, b) = \frac{1}{2m} \sum_{i=1}^m (f_{w,b}(x^{(i)}) - y^{(i)})^2$
+     - Parameter updates:
+       $$w := w - \alpha \frac{\partial J}{\partial w} = w - \alpha \frac{1}{m} X^T (\hat{y} - y)$$
+       $$b := b - \alpha \frac{\partial J}{\partial b} = b - \alpha \frac{1}{m} \sum (\hat{y} - y)$$
+   - Cost steadily decreases from initial $J(w,b) \approx 177.78$ to $J(w,b) \approx 7.97$ over 1,000 iterations.
 
-2. **Scikit-Learn Baseline (`LinearRegression`)**:
+2. **Scikit-Learn Baseline (`src/train.py`)**:
    - Benchmarked against the pure NumPy implementation for mathematical correctness and optimization parity.
 
 ---
@@ -63,8 +66,8 @@ In **Phase 1**, we establish the baseline numerical model to predict shipment ar
 
 | Model Architecture | RMSE (Hours) | MAE (Hours) | $R^2$ Score |
 | :--- | :--- | :--- | :--- |
-| **Pure NumPy (Gradient Descent)** | `4.0555` | `3.3334` | `0.7413` |
-| **Scikit-Learn LinearRegression** | `4.0559` | `3.3336` | `0.7413` |
+| **Pure NumPy Gradient Descent (`train_phase1.py`)** | `4.06` | `3.34` | `0.7413` |
+| **Scikit-Learn Baseline (`train.py`)** | `4.06` | `3.33` | `0.7413` |
 
 ---
 
@@ -102,12 +105,17 @@ pip install -r requirements.txt
 python process_dataco.py
 ```
 
-### 3. Train Baseline Models
+### 3. Run Pure NumPy Gradient Descent Training
+```bash
+python src/train_phase1.py
+```
+
+### 4. Run Production Training & Export Model Artifacts
 ```bash
 python src/train.py
 ```
 
-### 4. Run Delay Profiler Demo
+### 5. Run Delay Profiler Demo
 ```bash
 python main.py
 ```
