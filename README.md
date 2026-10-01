@@ -26,6 +26,7 @@ Project-Waybill/
 │   └── predict.py                    # Inference helper & risk classification
 ├── generate_phase2_data.py           # Phase 2 risk & customs delay data generator
 ├── process_dataco.py                 # DataCo dataset ingestion & feature engineering
+├── app.py                            # Interactive Streamlit frontend dashboard
 ├── main.py                           # Application entry point & demo CLI
 ├── requirements.txt                  # Python package dependencies
 └── README.md                         # Project documentation
@@ -160,10 +161,20 @@ python generate_phase2_data.py
 python src/train_phase2.py
 ```
 
+### 4. Interactive Streamlit Web Dashboard
+Launch the real-time interactive UI:
+```bash
+streamlit run app.py
+```
+Open your browser at `http://localhost:8501` to test:
+- **Phase 1 Tab**: Adjust route distance, payload weight, and port dwell times to see live linear delay forecasts and scatter distributions.
+- **Phase 2 Tab**: Configure destination country risk, hazmat cargo flags, and declaration completeness to evaluate probability of severe customs bottlenecks.
+
 ---
 
 ## 📈 Roadmap & Upcoming Phases
 - [x] **Phase 1**: Baseline Linear Regression & Financial Cost Optimization.
 - [x] **Phase 2**: Probabilistic Severe Delay Classification (Custom Logistic Regression & ROC-AUC).
+- [x] **Interactive Dashboard**: Streamlit Web UI with real-time sliders and risk profiling.
 - [ ] **Phase 3**: Deep Learning & Geospatial Multi-Modal Delay Transformer.
 - [ ] **Phase 4**: Agentic Supply Chain Risk Profiler (Autonomous Manifest Parsing & Alerting).
